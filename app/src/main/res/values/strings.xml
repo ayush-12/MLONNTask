@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">MlKitTask</string>
+    <string name="start_face_detector">Start Face Detector</string>
+    <string name="start_card_detector">Start Card Detector</string>
+    <string name="capture">Capture</string>
+</resources>

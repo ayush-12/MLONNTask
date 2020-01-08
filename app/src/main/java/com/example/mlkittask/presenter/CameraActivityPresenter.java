@@ -1,0 +1,50 @@
+package com.example.mlkittask.presenter;
+
+import android.content.Context;
+import android.view.View;
+
+import com.example.mlkittask.contract.CameraActivityContract;
+import com.example.mlkittask.model.CameraActivityModel;
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.face.FaceDetector;
+
+public class CameraActivityPresenter implements CameraActivityContract.Presenter {
+
+    private Context context;
+    private CameraActivityContract.View mView;
+    private CameraActivityContract.Model mModel;
+
+    public CameraActivityPresenter(Context context, CameraActivityContract.View view){
+        this.context = context;
+        this.mView = view;
+        initPresenter();
+    }
+
+    private void initPresenter(){
+        mModel= new CameraActivityModel(context);
+        mView.initView();
+    }
+    
+    
+    @Override
+    public void onClick(View view) {
+        
+    }
+
+    @Override
+    public FaceDetector getFaceDetector(CameraActivityContract.Presenter presenter) {
+        return mModel.getFaceDetector(mModel,presenter);
+    }
+
+    @Override
+    public void showCaptureButton() {
+        mView.showCaptureButton();
+    }
+
+    @Override
+    public void hideCaptureButton(String message) {
+        mView.hideCaptureButton(message);
+    }
+
+
+}

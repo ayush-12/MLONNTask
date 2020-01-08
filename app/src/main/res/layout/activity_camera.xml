@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.CameraActivity">
+
+    <SurfaceView
+        android:id="@+id/camera_view"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/capture_button"/>
+
+    <Button
+        android:id="@+id/capture_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+        android:layout_alignParentBottom="true"
+        android:text="@string/capture">
+    </Button>
+
+    <TextView
+        android:id="@+id/messgae_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="bsjdbjf"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:visibility="invisible"/>
+</RelativeLayout>
