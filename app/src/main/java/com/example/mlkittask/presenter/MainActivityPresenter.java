@@ -38,17 +38,20 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
         switch (view.getId()){
             case R.id.face_detector_button:{
                 Log.d(TAG, "onClick: face detector pressed");
-                startActivity();
+                startActivity("Face");
                 break;
             }
             case R.id.card_detector_button:{
+                Log.d(TAG, "onClick: face detector pressed");
+                startActivity("Object");
                 break;
             }
         }
     }
 
-    private void startActivity(){
+    private void startActivity(String detector){
         Intent intent = new Intent(context, CameraActivity.class);
+        intent.putExtra("which",detector);
         context.startActivity(intent);
     }
 }

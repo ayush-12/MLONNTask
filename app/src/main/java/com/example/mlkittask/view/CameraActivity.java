@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
@@ -14,12 +15,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.mlkittask.Detectors.CustomFaceDetector;
+import com.example.mlkittask.Detectors.CustomObjectDetector;
 import com.example.mlkittask.R;
 import com.example.mlkittask.contract.CameraActivityContract;
 import com.example.mlkittask.model.CameraActivityModel;
 import com.example.mlkittask.presenter.CameraActivityPresenter;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetectorOptions;
 
 import java.io.IOException;
 
@@ -31,7 +35,9 @@ public class CameraActivity extends AppCompatActivity implements CameraActivityC
     private CameraActivityContract.Model mModel;
 
     private SurfaceView cameraView;
-    private Button captureButton;
+
+    private Button captureButton;   // NO CODE ATTACH TO CAPTURE BUTTON
+
     private TextView messageTextView;
 
     private CameraSource cameraSource;
@@ -46,15 +52,25 @@ public class CameraActivity extends AppCompatActivity implements CameraActivityC
         mPresenter = new CameraActivityPresenter(this,this);
         mModel= new CameraActivityModel(this,this,mPresenter);
 
+        String which = getIntent().getStringExtra("which");
+        if(which.equalsIgnoreCase("Face")){
+            cameraSource = new CameraSource.Builder(this,mPresenter.getFaceDetector(mPresenter) )
+                    .setFacing(CameraSource.CAMERA_FACING_FRONT)
+                    .setRequestedFps(24)
+                    .setAutoFocusEnabled(true)
+                    .setRequestedPreviewSize(1920, 1024)
+                    .build();
+
+        }
+        else {
+            FirebaseVisionObjectDetectorOptions objectDetectorOptions =
+                    new FirebaseVisionObjectDetectorOptions.Builder()
+                            .setDetectorMode(FirebaseVisionObjectDetectorOptions.STREAM_MODE)
+                            .enableClassification().build();
 
 
+        }
 
-        cameraSource = new CameraSource.Builder(this,mPresenter.getFaceDetector(mPresenter) )
-                .setFacing(CameraSource.CAMERA_FACING_FRONT)
-                .setRequestedFps(24)
-                .setAutoFocusEnabled(true)
-                .setRequestedPreviewSize(1920, 1024)
-                .build();
 
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
@@ -70,6 +86,7 @@ public class CameraActivity extends AppCompatActivity implements CameraActivityC
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
 
             }
 
