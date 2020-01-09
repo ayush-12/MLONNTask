@@ -16,5 +16,8 @@ public interface MainActivityContract {
     interface Presenter{
         void onClick(android.view.View view);
 
+
+        void startCameraActivity(String whichDetector);
+
     }
 }

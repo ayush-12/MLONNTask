@@ -16,6 +16,7 @@ import com.example.mlkittask.R;
 import com.example.mlkittask.contract.MainActivityContract;
 import com.example.mlkittask.model.MainActivityModel;
 import com.example.mlkittask.presenter.MainActivityPresenter;
+import com.google.firebase.FirebaseApp;
 
 public class MainActivity extends AppCompatActivity implements MainActivityContract.View {
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         mModel= new MainActivityModel(this,this);
         mPresenter = new MainActivityPresenter(this,this);
 
-
+        FirebaseApp.initializeApp(this);
 
 
         checkForCameraPermission();

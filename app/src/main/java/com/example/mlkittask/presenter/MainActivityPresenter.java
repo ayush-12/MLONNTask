@@ -9,8 +9,6 @@ import com.example.mlkittask.R;
 import com.example.mlkittask.contract.MainActivityContract;
 import com.example.mlkittask.model.MainActivityModel;
 import com.example.mlkittask.view.CameraActivity;
-import com.example.mlkittask.view.MainActivity;
-import com.google.android.gms.vision.CameraSource;
 
 import static com.example.mlkittask.view.MainActivity.TAG;
 
@@ -20,38 +18,43 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     private MainActivityContract.View mView;
     private MainActivityContract.Model mModel;
 
-    public MainActivityPresenter(Context context, MainActivityContract.View view){
+    public MainActivityPresenter(Context context, MainActivityContract.View view) {
         this.context = context;
         this.mView = view;
 
         initPresenter();
     }
 
-    private void initPresenter(){
-        mModel= new MainActivityModel(context);
+    private void initPresenter() {
+        mModel = new MainActivityModel(context);
         mView.initView();
     }
 
     @Override
     public void onClick(View view) {
         Log.d(TAG, "onClick: clicked");
-        switch (view.getId()){
-            case R.id.face_detector_button:{
+        switch (view.getId()) {
+            case R.id.face_detector_button: {
                 Log.d(TAG, "onClick: face detector pressed");
-                startActivity("Face");
+                startCameraActivity("Face");
                 break;
             }
-            case R.id.card_detector_button:{
-                Log.d(TAG, "onClick: face detector pressed");
-                startActivity("Object");
+            case R.id.card_detector_button: {
+                Log.d(TAG, "onClick: card detector pressed");
+                startCameraActivity("Card");
                 break;
             }
         }
     }
 
-    private void startActivity(String detector){
+
+    @Override
+    public void startCameraActivity(String whichDetector) {
         Intent intent = new Intent(context, CameraActivity.class);
-        intent.putExtra("which",detector);
+        intent.putExtra("which",whichDetector);
         context.startActivity(intent);
+
     }
+
+
 }

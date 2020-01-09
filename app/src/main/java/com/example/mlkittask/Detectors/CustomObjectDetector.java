@@ -1,5 +1,6 @@
 package com.example.mlkittask.Detectors;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -9,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.example.mlkittask.MlKitClassesFromGitHub.FrameMetadata;
 import com.example.mlkittask.MlKitClassesFromGitHub.VisionProcessorBase;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.objects.FirebaseVisionObject;
@@ -24,7 +26,8 @@ public class CustomObjectDetector extends VisionProcessorBase<List<FirebaseVisio
 
     private final FirebaseVisionObjectDetector detector;
 
-    public CustomObjectDetector(FirebaseVisionObjectDetectorOptions options) {
+    public CustomObjectDetector(Context context, FirebaseVisionObjectDetectorOptions options) {
+        FirebaseApp.initializeApp(context);
         detector = FirebaseVision.getInstance().getOnDeviceObjectDetector(options);
     }
 

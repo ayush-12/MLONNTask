@@ -1,15 +1,16 @@
 package com.example.mlkittask.presenter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import com.example.mlkittask.contract.CameraActivityContract;
 import com.example.mlkittask.model.CameraActivityModel;
-import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.face.FaceDetector;
 
 public class CameraActivityPresenter implements CameraActivityContract.Presenter {
 
+    private static String TAG= "CameraPresenter";
     private Context context;
     private CameraActivityContract.View mView;
     private CameraActivityContract.Model mModel;
@@ -38,6 +39,7 @@ public class CameraActivityPresenter implements CameraActivityContract.Presenter
 
     @Override
     public void showCaptureButton() {
+        Log.d(TAG, "showCaptureButton: show capture button");
         mView.showCaptureButton();
     }
 
@@ -45,6 +47,7 @@ public class CameraActivityPresenter implements CameraActivityContract.Presenter
     public void hideCaptureButton(String message) {
         mView.hideCaptureButton(message);
     }
+
 
 
 }

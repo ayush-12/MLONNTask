@@ -11,6 +11,8 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
+import java.util.logging.Handler;
+
 public class CustomFaceDetector {
 
     public static String TAG="FaceDetector";
@@ -48,11 +50,21 @@ public class CustomFaceDetector {
 
                 if(faceSparseArray.size()>0){
                     Log.d(TAG, "receiveDetections: face detected");
-                    mPresenter.showCaptureButton();
+                    ((CameraActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mPresenter.showCaptureButton();
+                        }
+                    });
                 }
                 else {
                     Log.d(TAG, "receiveDetections: face not detected");
-                    mPresenter.hideCaptureButton("No face detected");
+                    ((CameraActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mPresenter.hideCaptureButton("No face detected");
+                        }
+                    });
                 }
             }
         });

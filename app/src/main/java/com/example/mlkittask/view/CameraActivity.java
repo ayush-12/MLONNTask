@@ -15,21 +15,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.mlkittask.Detectors.CustomFaceDetector;
 import com.example.mlkittask.Detectors.CustomObjectDetector;
+import com.example.mlkittask.MlKitClassesFromGitHub.CameraSourceML;
+import com.example.mlkittask.MlKitClassesFromGitHub.CameraSourcePreview;
 import com.example.mlkittask.R;
 import com.example.mlkittask.contract.CameraActivityContract;
 import com.example.mlkittask.model.CameraActivityModel;
 import com.example.mlkittask.presenter.CameraActivityPresenter;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetectorOptions;
 
 import java.io.IOException;
 
 public class CameraActivity extends AppCompatActivity implements CameraActivityContract.View {
 
-    public static String TAG="CameraActivity";
+    public static String TAG = "CameraActivity";
 
     private CameraActivityContract.Presenter mPresenter;
     private CameraActivityContract.Model mModel;
@@ -42,33 +44,49 @@ public class CameraActivity extends AppCompatActivity implements CameraActivityC
 
     private CameraSource cameraSource;
 
-    private String message="";
+
+    private String message = "";
+
+
+    private CameraSourceML cameraSourceML = null;
+    private CameraSourcePreview cameraSourcePreview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        mPresenter = new CameraActivityPresenter(this,this);
-        mModel= new CameraActivityModel(this,this,mPresenter);
+        mPresenter = new CameraActivityPresenter(this, this);
+        mModel = new CameraActivityModel(this, this, mPresenter);
+
+        FirebaseApp.initializeApp(this);
+
 
         String which = getIntent().getStringExtra("which");
-        if(which.equalsIgnoreCase("Face")){
-            cameraSource = new CameraSource.Builder(this,mPresenter.getFaceDetector(mPresenter) )
+
+        if (which.equalsIgnoreCase("Face")) {
+            cameraSource = new CameraSource.Builder(this, mPresenter.getFaceDetector(mPresenter))
                     .setFacing(CameraSource.CAMERA_FACING_FRONT)
                     .setRequestedFps(24)
                     .setAutoFocusEnabled(true)
                     .setRequestedPreviewSize(1920, 1024)
                     .build();
 
-        }
-        else {
+        } else {
+            cameraView.setVisibility(View.INVISIBLE);
+            cameraSourceML = new CameraSourceML(this);
+            cameraSourceML.setFacing(CameraSource.CAMERA_FACING_BACK);
+
             FirebaseVisionObjectDetectorOptions objectDetectorOptions =
                     new FirebaseVisionObjectDetectorOptions.Builder()
                             .setDetectorMode(FirebaseVisionObjectDetectorOptions.STREAM_MODE)
-                            .enableClassification().build();
+                            .enableClassification()
+                            .build();
 
+            cameraSourceML.setMachineLearningFrameProcessor(
+                    new CustomObjectDetector(this, objectDetectorOptions));
 
+            cameraSourcePreview.start(cameraSourceML);
         }
 
 
@@ -103,9 +121,12 @@ public class CameraActivity extends AppCompatActivity implements CameraActivityC
     @Override
     public void initView() {
 
-        cameraView =  findViewById(R.id.camera_view);
+        cameraView = findViewById(R.id.camera_view);
         captureButton = findViewById(R.id.capture_button);
-        messageTextView=findViewById(R.id.messgae_text_view);
+        messageTextView = findViewById(R.id.messgae_text_view);
+
+        cameraSourcePreview = findViewById(R.id.firePreview);
+
     }
 
     @Override
@@ -122,4 +143,13 @@ public class CameraActivity extends AppCompatActivity implements CameraActivityC
         messageTextView.setText(message);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (cameraSource != null) {
+            cameraSource.release();
+        } else {
+            cameraSourceML.release();
+        }
+    }
 }
